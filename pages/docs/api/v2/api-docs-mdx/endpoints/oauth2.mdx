@@ -1,10 +1,13 @@
 import Example from '~/components/example'
 import { Code } from '~/components/text/code'
+import Note from '~/components/text/note'
+import Endpoint from '~/components/api/endpoint'
+import Request from '~/components/api/request'
 import { HelpLink } from '~/components/text/link'
 
 export const meta = {
   editUrl: 'pages/docs/api/v2/api-docs-mdx/endpoints/oauth2.mdx',
-  lastEdited: '2019-01-21T01:10:06.000Z'
+  lastEdited: '2019-04-20T10:25:57.000Z'
 }
 
 ## OAuth2
@@ -12,7 +15,7 @@ export const meta = {
 OAuth2 lets your app request authorization to private details in a user's ZEIT account.
 When using OAuth Apps, all actions are performed as the user who granted access to the OAuth App.
 
-You will need to register your app before getting started. For registration, please [contact us](mailto:team@zeit.co).
+You will need to register your app before getting started, you can do this by visiting your account [integrations dashboard](/dashboard/integrations).
 
 ### Authorization
 
@@ -22,7 +25,7 @@ Your app should redirect users to the following URL:
 https://zeit.co/oauth/authorize
 ```
 
-You will pass the following values as query parameters.
+You will pass the following values as query parameters:
 
 | Key              | <HelpLink href="#api-basics/types" hasIcon>Type</HelpLink> | Required | Description                                                                                  |
 | ---------------- | ---------------------------------------------------------- | -------- | -------------------------------------------------------------------------------------------- |
@@ -30,9 +33,9 @@ You will pass the following values as query parameters.
 | **redirect_uri** | <HelpLink href="#api-basics/types">String</HelpLink>       | No       | URL to redirect back.                                                                        |
 | **state**        | <HelpLink href="#api-basics/types">String</HelpLink>       | No       | Random string to be passed back upon completion. It is used to protect against CSRF attacks. |
 
-If the user grants your request, we redirects back to your site with a `code` parameter and with a `state` parameter if you provided one in previous step.
+If the user grants your request, we redirect back to your site with a `code` parameter and a `state` parameter if you provided one in previous step.
 
-The process should be aborted if the states don't match.
+<Note>The process should be aborted if the states do not match.</Note>
 
 <Example>
   <span>Example request url:</span>
@@ -48,11 +51,11 @@ Example successful redirect url:
 
 ### Exchanging code for an access token
 
-If all goes well, exchange the authorization code for an access token using the following API.
+If all goes well, exchange the authorization code for an access token using the following API:
 
-<Code>POST https://api.zeit.co/v2/oauth/access_token</Code>
+<Endpoint method="POST" url="https://api.zeit.co/v2/oauth/access_token" />
 
-You will pass the following values to request body in the form of `application/x-www-form-urlencoded`.
+You will pass the following values to request body in the form of `application/x-www-form-urlencoded`:
 
 | Key               | <HelpLink href="#api-basics/types" hasIcon>Type</HelpLink> | Required | Description                 |
 | ----------------- | ---------------------------------------------------------- | -------- | --------------------------- |
@@ -60,14 +63,18 @@ You will pass the following values to request body in the form of `application/x
 | **client_secret** | <HelpLink href="#api-basics/types">String</HelpLink>       | Yes      | Secret of your application. |
 | **code**          | <HelpLink href="#api-basics/types">String</HelpLink>       | Yes      | The code you received.      |
 
-You'll receive a JSON response containing an `access_token`.
+You'll receive a JSON response containing an `access_token`:
 
 <Example>
   <span>Example access token exchange request.</span>
 
-<Code>{`POST https://api.zeit.co/v2/oauth/access_token
-client_id=oac_s4cllbR9Ao8307IDSkluOQBS&client_secret=EOBPvZuBYAtb3SbYo8H1iWFP&code=jMIukZ1DBCKXHje3X14BCkU0
-`}</Code>
+<Request
+  method="POST"
+  url="https://api.zeit.co/v2/oauth/access_token?client_id=oac_s4cllbR9Ao8307IDSkluOQBS&client_secret=EOBPvZuBYAtb3SbYo8H1iWFP&code=jMIukZ1DBCKXHje3X14BCkU0"
+  headers={{
+    'Content-Type': 'application/x-www-form-urlencoded'
+  }}
+/>
 
 Example successful (**200**) response:
 
